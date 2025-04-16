@@ -5,7 +5,6 @@ namespace ApiPruebaIntegrity.Data
 {
     public class DBContextTest:DbContext
     {
-
         public DBContextTest(DbContextOptions<DBContextTest> options) : base(options)
         {
 
@@ -18,8 +17,5 @@ namespace ApiPruebaIntegrity.Data
         {
             base.OnModelCreating(modelBuilder);
         }
-
-
-
     }
 }
