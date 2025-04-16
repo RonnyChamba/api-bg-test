@@ -11,10 +11,14 @@ namespace ApiPruebaIntegrity.Data
         }
 
         public DbSet<User> Users { get; set; }
-
+        public DbSet<Customer> Customers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Customer>()
+                .HasIndex(u => u.FullName)
+                .HasDatabaseName("IX_User_FullName");
+
             base.OnModelCreating(modelBuilder);
         }
     }
