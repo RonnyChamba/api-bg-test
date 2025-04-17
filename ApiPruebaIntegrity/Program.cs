@@ -1,9 +1,13 @@
 using ApiPruebaIntegrity.Data;
+using ApiPruebaIntegrity.Mappers;
+using ApiPruebaIntegrity.Services;
+using ApiPruebaIntegrity.Services.Impl;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddScoped<IUserService, UserServiceImpl>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -15,6 +19,11 @@ builder.Services.AddDbContext<DBContextTest>(o => {
     o.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+builder.Services.AddAutoMapper
+(
+    typeof(CompanyMappingProfile),
+    typeof(UserMappingProfile)
+);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
