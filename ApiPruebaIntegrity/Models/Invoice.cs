@@ -50,5 +50,7 @@ namespace ApiPruebaIntegrity.Models
 
         [ForeignKey("user_id")]
         public User User { get; set; }
+
+        public List<InvoicePayForm> InvoicePayForm { get; set; } = new List<InvoicePayForm>();
     }
 }

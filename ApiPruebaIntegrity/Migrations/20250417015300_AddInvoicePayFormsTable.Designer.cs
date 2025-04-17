@@ -4,6 +4,7 @@ using ApiPruebaIntegrity.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ApiPruebaIntegrity.Migrations
 {
     [DbContext(typeof(DBContextTest))]
-    partial class DBContextTestModelSnapshot : ModelSnapshot
+    [Migration("20250417015300_AddInvoicePayFormsTable")]
+    partial class AddInvoicePayFormsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -201,20 +204,15 @@ namespace ApiPruebaIntegrity.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<int?>("InvoiceId")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("Total")
                         .HasColumnType("decimal(7,2)");
 
-                    b.Property<int>("invoice_id")
-                        .HasColumnType("int");
-
-                    b.Property<int>("pay_form_id")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("invoice_id");
-
-                    b.HasIndex("pay_form_id");
+                    b.HasIndex("InvoiceId");
 
                     b.ToTable("invoice_pay_form");
                 });
@@ -361,21 +359,9 @@ namespace ApiPruebaIntegrity.Migrations
 
             modelBuilder.Entity("ApiPruebaIntegrity.Models.InvoicePayForm", b =>
                 {
-                    b.HasOne("ApiPruebaIntegrity.Models.Invoice", "Invoice")
+                    b.HasOne("ApiPruebaIntegrity.Models.Invoice", null)
                         .WithMany("InvoicePayForm")
-                        .HasForeignKey("invoice_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ApiPruebaIntegrity.Models.PayForm", "PayForm")
-                        .WithMany()
-                        .HasForeignKey("pay_form_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Invoice");
-
-                    b.Navigation("PayForm");
+                        .HasForeignKey("InvoiceId");
                 });
 
             modelBuilder.Entity("ApiPruebaIntegrity.Models.Invoice", b =>
