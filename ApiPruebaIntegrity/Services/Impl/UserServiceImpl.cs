@@ -3,6 +3,7 @@ using ApiPruebaIntegrity.DTOs.Request;
 using ApiPruebaIntegrity.DTOs.Response;
 using ApiPruebaIntegrity.Exceptions;
 using ApiPruebaIntegrity.Models;
+using ApiPruebaIntegrity.Util;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
@@ -40,6 +41,7 @@ namespace ApiPruebaIntegrity.Services.Impl
             var userModel = _mapper.Map<User>(reqDTO.Payload.UserReqDTO);
 
             userModel.Company = companyModel;
+            userModel.Password = AuthUtil.HashPassword(userModel.Password);
             await _dBContextTest.Users.AddAsync(userModel);
             await _dBContextTest.SaveChangesAsync();
 

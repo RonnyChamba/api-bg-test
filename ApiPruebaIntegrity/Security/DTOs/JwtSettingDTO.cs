@@ -1,6 +1,6 @@
 ﻿namespace ApiPruebaIntegrity.Security.DTOs
 {
-    public record JwtSettingsDTO
+    public record JwtSettingDTO
     (
         string Key,
         string Issuer,
