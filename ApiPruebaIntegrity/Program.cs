@@ -2,6 +2,8 @@ using ApiPruebaIntegrity.Data;
 using ApiPruebaIntegrity.Mappers;
 using ApiPruebaIntegrity.Services;
 using ApiPruebaIntegrity.Services.Impl;
+using ApiPruebaIntegrity.Util;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,7 +11,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddScoped<IUserService, UserServiceImpl>();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .ConfigureApiBehaviorOptions(options =>
+    {
+        options.InvalidModelStateResponseFactory = context => ValidationUtil.CreateJsonRespStateInvalid(context);
+    });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

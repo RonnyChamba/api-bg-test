@@ -6,6 +6,6 @@ namespace ApiPruebaIntegrity.Services
     public interface IUserService
     {
 
-        GenericRespDTO<string> SaveCompany(GenericReqDTO<CompanyReqDTO> reqDTO);
+       Task<GenericRespDTO<string>> SaveCompany(GenericReqDTO<CompanyReqDTO> reqDTO);
     }
 }
