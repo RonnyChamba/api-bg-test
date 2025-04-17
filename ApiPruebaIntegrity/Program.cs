@@ -1,5 +1,6 @@
 using ApiPruebaIntegrity.Data;
 using ApiPruebaIntegrity.Mappers;
+using ApiPruebaIntegrity.Middleware;
 using ApiPruebaIntegrity.Services;
 using ApiPruebaIntegrity.Services.Impl;
 using ApiPruebaIntegrity.Util;
@@ -31,7 +32,7 @@ builder.Services.AddAutoMapper
     typeof(UserMappingProfile)
 );
 var app = builder.Build();
-
+app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
