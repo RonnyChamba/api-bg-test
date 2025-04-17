@@ -24,5 +24,8 @@ namespace ApiPruebaIntegrity.Models
         [ForeignKey("invoice_id")]
         public Invoice Invoice { get; set; }
 
+        [ForeignKey("product_id")]
+        public Product Product { get; set; }
+
     }
 }

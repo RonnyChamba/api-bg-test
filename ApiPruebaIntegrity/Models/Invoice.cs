@@ -43,6 +43,12 @@ namespace ApiPruebaIntegrity.Models
 
         public DateTime CreateAt { set; get; }
 
-        public List<Invoice> Details { get; set; } = new List<Invoice>();
+        public List<InvoiceDetail> Details { get; set; } = new List<InvoiceDetail>();
+
+        [ForeignKey("customer_id")]
+        public Customer customer { get; set; }
+
+        [ForeignKey("user_id")]
+        public User User { get; set; }
     }
 }
