@@ -1,7 +1,5 @@
 ﻿using ApiPruebaIntegrity.DTOs.Request;
-using ApiPruebaIntegrity.DTOs.Response;
 using ApiPruebaIntegrity.Services;
-using Azure.Core;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiPruebaIntegrity.Controllers
