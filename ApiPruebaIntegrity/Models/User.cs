@@ -27,6 +27,13 @@ namespace ApiPruebaIntegrity.Models
         [MaxLength(100)]
         public string Email { set; get; }
 
+        [ForeignKey("company_id")]
+        public Company Company { get; set; }
+
+
+        [MaxLength(10)]
+        public string Rol { set; get; }
+
         public DateTime CreateAt { set; get; }
     }
 }
