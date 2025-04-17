@@ -39,6 +39,15 @@ namespace ApiPruebaIntegrity.Data
                .HasIndex(u => u.FullNameCustomer)
                .HasDatabaseName("IX_Invoice_FullNameCustomer");
 
+
+            modelBuilder.Entity<Invoice>()
+               .HasIndex(u => u.Total)
+               .HasDatabaseName("IX_Invoice_Total");
+
+            modelBuilder.Entity<Invoice>()
+               .HasIndex(u => u.CreateAt)
+               .HasDatabaseName("IX_Invoice_CreateAt");
+
             base.OnModelCreating(modelBuilder);
         }
     }
