@@ -7,5 +7,6 @@ namespace ApiPruebaIntegrity.Services
     {
 
        Task<GenericRespDTO<string>> SaveCompany(GenericReqDTO<CompanyReqDTO> reqDTO);
+       Task<GenericRespDTO<bool>> ExistUserByUsername(GenericReqDTO<string> reqDTO);
     }
 }
