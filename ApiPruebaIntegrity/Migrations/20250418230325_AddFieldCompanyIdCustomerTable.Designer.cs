@@ -4,6 +4,7 @@ using ApiPruebaIntegrity.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ApiPruebaIntegrity.Migrations
 {
     [DbContext(typeof(DBContextTest))]
-    partial class DBContextTestModelSnapshot : ModelSnapshot
+    [Migration("20250418230325_AddFieldCompanyIdCustomerTable")]
+    partial class AddFieldCompanyIdCustomerTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -89,8 +92,6 @@ namespace ApiPruebaIntegrity.Migrations
                         .HasColumnType("nvarchar(10)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CompanyId");
 
                     b.HasIndex("FullName")
                         .HasDatabaseName("IX_User_FullName");
@@ -374,17 +375,6 @@ namespace ApiPruebaIntegrity.Migrations
                     b.ToTable("users");
                 });
 
-            modelBuilder.Entity("ApiPruebaIntegrity.Models.Customer", b =>
-                {
-                    b.HasOne("ApiPruebaIntegrity.Models.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Company");
-                });
-
             modelBuilder.Entity("ApiPruebaIntegrity.Models.Invoice", b =>
                 {
                     b.HasOne("ApiPruebaIntegrity.Models.Customer", "customer")
@@ -447,7 +437,7 @@ namespace ApiPruebaIntegrity.Migrations
                     b.HasOne("ApiPruebaIntegrity.Models.Company", "Company")
                         .WithMany()
                         .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Company");

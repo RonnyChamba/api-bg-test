@@ -20,6 +20,13 @@ namespace ApiPruebaIntegrity.Models
 
         [MaxLength(100)]
         public string Address { set; get; }
+ 
+       public int CompanyId { get; set; }
+
+        public Company Company { get; set; }
+
+        [MaxLength(10)]
+        public string Status { set; get; }
 
         public DateTime CreateAt { set; get; }
     }

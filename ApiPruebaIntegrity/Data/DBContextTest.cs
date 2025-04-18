@@ -51,6 +51,18 @@ namespace ApiPruebaIntegrity.Data
                .HasIndex(u => u.CreateAt)
                .HasDatabaseName("IX_Invoice_CreateAt");
 
+            modelBuilder.Entity<Customer>()
+                .HasOne(c => c.Company)
+                .WithMany()
+                .HasForeignKey(c => c.CompanyId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<User>()
+                .HasOne(c => c.Company)
+                .WithMany()
+                .HasForeignKey(c => c.CompanyId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             base.OnModelCreating(modelBuilder);
         }
     }
