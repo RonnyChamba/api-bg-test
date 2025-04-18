@@ -28,7 +28,7 @@ namespace ApiPruebaIntegrity.Util
             new Claim(ClaimTypes.Name, user.Username),
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new Claim(ClaimTypes.Role, user.Rol),
-            new Claim("companyId", user.Company.Id.ToString())
+            new Claim(IntegrityApiConstants.NameClaimsCompany, user.Company.Id.ToString())
             };
 
             var token = new JwtSecurityToken(
