@@ -1,6 +1,7 @@
 using ApiPruebaIntegrity.Data;
 using ApiPruebaIntegrity.Mappers;
 using ApiPruebaIntegrity.Middleware;
+using ApiPruebaIntegrity.Security.Service;
 using ApiPruebaIntegrity.Services;
 using ApiPruebaIntegrity.Services.Impl;
 using ApiPruebaIntegrity.Util;
@@ -13,6 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddScoped<IUserService, UserServiceImpl>();
+builder.Services.AddScoped<IAuthenticationService, AuthenticationServiceImpl>();
 
 builder.Services.AddControllers()
     .ConfigureApiBehaviorOptions(options =>
