@@ -35,6 +35,26 @@ namespace ApiPruebaIntegrity.Services.Impl
             return new GenericRespDTO<bool>("OK", "Transaction successfully processed", isExists);
         }
 
+        public async Task<GenericRespDTO<List<UserRespDTO>>> FindAllUsers(string name)
+        {
+            _logger.LogInformation("Filter Name: {}", name);
+
+            var idCompany = RetrieveIdCompanySession();
+
+            var query = _dBContextTest.Users
+                        .Where(user => user.CompanyId == idCompany);
+
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                query = query.Where(user => user.Names.Contains(name) || user.LasName.Contains(name));
+            }
+
+            var listUsers = await query.ToListAsync();
+            var userListDTO = _mapper.Map<List<UserRespDTO>>(listUsers);
+
+            return new GenericRespDTO<List<UserRespDTO>>("OK", "Transaction successfully processed", userListDTO);
+        }
+
         public async Task<GenericRespDTO<string>> SaveCompany(GenericReqDTO<CompanyReqDTO> reqDTO)
         {
             _logger.LogInformation("Req SaveCompany() {}", reqDTO);
@@ -71,13 +91,7 @@ namespace ApiPruebaIntegrity.Services.Impl
         {
             var userModel = _mapper.Map<User>(userReqDTO);
             userModel.Rol = IntegrityApiConstants.NameRolUser;
-
-            var userLogin = RetriveClaimsPrincipal();
-
-            var idCompany = JwtClaimsHelper.GetCompanyId(userLogin)
-                ?? throw new BadCredentialException("A company was not found in session");
-
-            userModel.CompanyId = int.Parse(idCompany);
+            userModel.CompanyId = RetrieveIdCompanySession();
             userModel.Password = AuthUtil.HashPassword(userModel.Password);
 
             return userModel;
@@ -97,6 +111,17 @@ namespace ApiPruebaIntegrity.Services.Impl
                 
                 throw new ConflictException($"Username {username} already exists");
             }
+        }
+
+        private int RetrieveIdCompanySession()
+        {
+
+            var userLogin = RetriveClaimsPrincipal();
+
+            var idCompany = JwtClaimsHelper.GetCompanyId(userLogin)
+                ?? throw new BadCredentialException("A company was not found in session");
+
+            return int.Parse(idCompany);
         }
     }
 }
