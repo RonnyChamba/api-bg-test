@@ -123,5 +123,20 @@ namespace ApiPruebaIntegrity.Services.Impl
 
             return int.Parse(idCompany);
         }
+
+        public async Task<GenericRespDTO<UserRespDTO>> FindUser(int id)
+        {
+            _logger.LogInformation("Id user find: {}", id);
+
+            var userModel = await _dBContextTest
+                .Users
+                .Where(x => x.Id == id)
+                .FirstOrDefaultAsync() 
+                ?? throw new NotFoundException($"User with id {id} no exist");
+
+            var userResp = _mapper.Map<UserRespDTO>(userModel);
+
+            return new GenericRespDTO<UserRespDTO>("OK", "User Found succcess", userResp);
+        }
     }
 }

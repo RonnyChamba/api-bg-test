@@ -38,5 +38,15 @@ namespace ApiPruebaIntegrity.Controllers
 
         }
 
+        [Authorize]
+        [HttpGet("{id}")]
+        public async Task<IActionResult> FindUser(int id)
+        {
+            var response = await _userService.FindUser(id);
+
+            return Ok(response);
+
+        }
+
     }
 }
