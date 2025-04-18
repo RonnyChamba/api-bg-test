@@ -37,6 +37,10 @@ namespace ApiPruebaIntegrity.Models
         [MaxLength(10)]
         public string Rol { set; get; }
 
+
+        [MaxLength(10)]
+        public string Status { set; get; }
+
         public DateTime CreateAt { set; get; }
     }
 }

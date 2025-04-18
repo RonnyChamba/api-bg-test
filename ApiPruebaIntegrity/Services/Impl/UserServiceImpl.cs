@@ -7,7 +7,6 @@ using ApiPruebaIntegrity.Security.JwtUtils;
 using ApiPruebaIntegrity.Util;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.JsonWebTokens;
 using System.Security.Claims;
 
 namespace ApiPruebaIntegrity.Services.Impl
@@ -42,7 +41,8 @@ namespace ApiPruebaIntegrity.Services.Impl
             var idCompany = RetrieveIdCompanySession();
 
             var query = _dBContextTest.Users
-                        .Where(user => user.CompanyId == idCompany);
+                        .Where(user => user.CompanyId == idCompany && 
+                               user.Status.Equals(IntegrityApiConstants.StatusActive));
 
             if (!string.IsNullOrWhiteSpace(name))
             {
@@ -65,6 +65,7 @@ namespace ApiPruebaIntegrity.Services.Impl
             var userModel = _mapper.Map<User>(reqDTO.Payload.UserReqDTO);
 
             userModel.Company = companyModel;
+            userModel.Status = IntegrityApiConstants.StatusActive;
             userModel.Password = AuthUtil.HashPassword(userModel.Password);
             await _dBContextTest.Users.AddAsync(userModel);
             await _dBContextTest.SaveChangesAsync();
@@ -93,6 +94,7 @@ namespace ApiPruebaIntegrity.Services.Impl
             userModel.Rol = IntegrityApiConstants.NameRolUser;
             userModel.CompanyId = RetrieveIdCompanySession();
             userModel.Password = AuthUtil.HashPassword(userModel.Password);
+            userModel.Status = IntegrityApiConstants.StatusActive;
 
             return userModel;
 
@@ -128,11 +130,7 @@ namespace ApiPruebaIntegrity.Services.Impl
         {
             _logger.LogInformation("Id user find: {}", id);
 
-            var userModel = await _dBContextTest
-                .Users
-                .Where(x => x.Id == id)
-                .FirstOrDefaultAsync() 
-                ?? throw new NotFoundException($"User with id {id} no exist");
+            var userModel = await RetrieveUserById(id);
 
             var userResp = _mapper.Map<UserRespDTO>(userModel);
 
@@ -169,14 +167,26 @@ namespace ApiPruebaIntegrity.Services.Impl
             return new GenericRespDTO<string>("OK", "Password User updated succcess", "");
         }
 
+        public async  Task<GenericRespDTO<string>> DeleteUser(int id)
+        {
+
+            var userModel = await RetrieveUserById(id);
+            userModel.Status = IntegrityApiConstants.StatusDelete;
+            await _dBContextTest.SaveChangesAsync();
+
+            return new GenericRespDTO<string>("OK", "User deleted succcess", "");
+        }
+
         private async Task<User> RetrieveUserById(int id) 
         {
 
             return await _dBContextTest
                                        .Users
-                                       .Where(x => x.Id == id)
+                                       .Where(x => x.Id == id && x.Status.Equals(IntegrityApiConstants.StatusActive))
                                        .FirstOrDefaultAsync()
                                        ?? throw new NotFoundException($"User with id {id} no exist");
         }
+
+        
     }
 }

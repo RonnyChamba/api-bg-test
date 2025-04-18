@@ -58,6 +58,15 @@ namespace ApiPruebaIntegrity.Controllers
         }
 
         [Authorize]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            var response = await _userService.DeleteUser(id);
+            return Ok(response);
+
+        }
+
+        [Authorize]
         [HttpPatch("update-passsword/{id}")]
         public async Task<IActionResult> UpdatePasswordUser([FromBody] GenericReqDTO<string> reqDTO, int id)
         {

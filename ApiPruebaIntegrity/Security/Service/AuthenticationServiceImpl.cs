@@ -45,7 +45,8 @@ namespace ApiPruebaIntegrity.Security.Service
             return await _dbContextTest
                 .Users
                 .Include(u => u.Company)
-                .Where(u => u.Username.Equals(username))
+                .Where(u => u.Username.Equals(username) &&
+                       u.Status.Equals(IntegrityApiConstants.StatusActive))
                 .FirstOrDefaultAsync();
         }
     }

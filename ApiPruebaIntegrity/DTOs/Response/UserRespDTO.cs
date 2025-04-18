@@ -11,6 +11,7 @@ namespace ApiPruebaIntegrity.DTOs.Response
         string Email,
         int CompanyId,
         string Rol,
+        string Status,
         string CreateAt
     );
 }
