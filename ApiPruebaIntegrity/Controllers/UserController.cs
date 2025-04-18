@@ -57,5 +57,15 @@ namespace ApiPruebaIntegrity.Controllers
 
         }
 
+        [Authorize]
+        [HttpPatch("update-passsword/{id}")]
+        public async Task<IActionResult> UpdatePasswordUser([FromBody] GenericReqDTO<string> reqDTO, int id)
+        {
+            var response = await _userService.UpdatePasswordUser(reqDTO, id);
+
+            return Ok(response);
+
+        }
+
     }
 }

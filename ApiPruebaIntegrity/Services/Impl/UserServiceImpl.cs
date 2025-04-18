@@ -142,13 +142,9 @@ namespace ApiPruebaIntegrity.Services.Impl
         public async Task<GenericRespDTO<string>> UpdateUser(GenericReqDTO<UpdateUserReqDTO> reqDTO, int id)
         {
 
-            _logger.LogInformation($"Updated user: {reqDTO} id: {id}");
+            _logger.LogInformation("Updated user: {} id: {}", reqDTO, id);
 
-            var userModel = await  _dBContextTest
-                .Users
-                .Where(x => x.Id == id)
-                .FirstOrDefaultAsync()
-                ?? throw new NotFoundException($"User with id {id} no exist");
+            var userModel = await RetrieveUserById(id);
 
 
             var newDataUser = reqDTO.Payload;
@@ -159,6 +155,28 @@ namespace ApiPruebaIntegrity.Services.Impl
             await _dBContextTest.SaveChangesAsync();
 
             return new GenericRespDTO<string>("OK", "User Updated succcess", userModel.Id.ToString());
+        }
+
+        public async Task<GenericRespDTO<string>> UpdatePasswordUser(GenericReqDTO<string> reqDTO, int id)
+        {
+            _logger.LogInformation("Req UpdatePasswordUser: {}, id:{}", reqDTO, id);
+
+            var userModel =  await RetrieveUserById(id);
+            userModel.Password = AuthUtil.HashPassword(reqDTO.Payload);
+
+            await _dBContextTest.SaveChangesAsync();
+
+            return new GenericRespDTO<string>("OK", "Password User updated succcess", "");
+        }
+
+        private async Task<User> RetrieveUserById(int id) 
+        {
+
+            return await _dBContextTest
+                                       .Users
+                                       .Where(x => x.Id == id)
+                                       .FirstOrDefaultAsync()
+                                       ?? throw new NotFoundException($"User with id {id} no exist");
         }
     }
 }
