@@ -138,5 +138,27 @@ namespace ApiPruebaIntegrity.Services.Impl
 
             return new GenericRespDTO<UserRespDTO>("OK", "User Found succcess", userResp);
         }
+
+        public async Task<GenericRespDTO<string>> UpdateUser(GenericReqDTO<UpdateUserReqDTO> reqDTO, int id)
+        {
+
+            _logger.LogInformation($"Updated user: {reqDTO} id: {id}");
+
+            var userModel = await  _dBContextTest
+                .Users
+                .Where(x => x.Id == id)
+                .FirstOrDefaultAsync()
+                ?? throw new NotFoundException($"User with id {id} no exist");
+
+
+            var newDataUser = reqDTO.Payload;
+            userModel.Email = newDataUser.Email;
+            userModel.Names = newDataUser.Names;
+            userModel.LasName = newDataUser.LasName;
+
+            await _dBContextTest.SaveChangesAsync();
+
+            return new GenericRespDTO<string>("OK", "User Updated succcess", userModel.Id.ToString());
+        }
     }
 }

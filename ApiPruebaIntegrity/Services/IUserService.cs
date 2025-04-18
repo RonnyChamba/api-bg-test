@@ -12,6 +12,8 @@ namespace ApiPruebaIntegrity.Services
         Task<GenericRespDTO<List<UserRespDTO>>> FindAllUsers(string name);
 
         Task<GenericRespDTO<UserRespDTO>> FindUser(int id);
+
+        Task<GenericRespDTO<string>> UpdateUser(GenericReqDTO<UpdateUserReqDTO> reqDTO, int id);
         Task<GenericRespDTO<bool>> ExistUserByUsername(GenericReqDTO<string> reqDTO);
     }
 }

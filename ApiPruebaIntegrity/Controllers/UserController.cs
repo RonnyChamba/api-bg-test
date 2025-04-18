@@ -1,7 +1,6 @@
 ﻿using ApiPruebaIntegrity.DTOs.Request;
 using ApiPruebaIntegrity.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiPruebaIntegrity.Controllers
@@ -43,6 +42,16 @@ namespace ApiPruebaIntegrity.Controllers
         public async Task<IActionResult> FindUser(int id)
         {
             var response = await _userService.FindUser(id);
+
+            return Ok(response);
+
+        }
+
+        [Authorize]
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> UpdateUser([FromBody] GenericReqDTO<UpdateUserReqDTO> reqDTO, int id)
+        {
+            var response = await _userService.UpdateUser(reqDTO, id);
 
             return Ok(response);
 
