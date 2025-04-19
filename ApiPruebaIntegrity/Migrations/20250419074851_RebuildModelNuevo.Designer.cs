@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ApiPruebaIntegrity.Migrations
 {
     [DbContext(typeof(DBContextTest))]
-    [Migration("20250417000928_AddIndexInvoiceTable")]
-    partial class AddIndexInvoiceTable
+    [Migration("20250419074851_RebuildModelNuevo")]
+    partial class RebuildModelNuevo
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,33 @@ namespace ApiPruebaIntegrity.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("ApiPruebaIntegrity.Models.Company", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<decimal>("PorcentajeIva")
+                        .HasMaxLength(50)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("company");
+                });
 
             modelBuilder.Entity("ApiPruebaIntegrity.Models.Customer", b =>
                 {
@@ -43,6 +70,9 @@ namespace ApiPruebaIntegrity.Migrations
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
 
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreateAt")
                         .HasColumnType("datetime2");
 
@@ -56,7 +86,14 @@ namespace ApiPruebaIntegrity.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("CompanyId");
 
                     b.HasIndex("FullName")
                         .HasDatabaseName("IX_User_FullName");
@@ -80,6 +117,9 @@ namespace ApiPruebaIntegrity.Migrations
                     b.Property<DateTime>("CreateAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
+
                     b.Property<string>("EmailCustomer")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -94,9 +134,6 @@ namespace ApiPruebaIntegrity.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
-
-                    b.Property<int?>("InvoiceId")
-                        .HasColumnType("int");
 
                     b.Property<string>("InvoiceNumber")
                         .IsRequired()
@@ -125,15 +162,26 @@ namespace ApiPruebaIntegrity.Migrations
                     b.Property<decimal>("Total")
                         .HasColumnType("decimal(7,2)");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("CreateAt")
+                        .HasDatabaseName("IX_Invoice_CreateAt");
+
+                    b.HasIndex("CustomerId");
 
                     b.HasIndex("FullNameCustomer")
                         .HasDatabaseName("IX_Invoice_FullNameCustomer");
 
-                    b.HasIndex("InvoiceId");
-
                     b.HasIndex("InvoiceNumber")
                         .HasDatabaseName("IX_Invoice_InvoiceNumber");
+
+                    b.HasIndex("Total")
+                        .HasDatabaseName("IX_Invoice_Total");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("invoices");
                 });
@@ -159,20 +207,74 @@ namespace ApiPruebaIntegrity.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<int>("InvoiceId")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(7,2)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("Subtotal")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("invoice_id")
+                    b.HasKey("Id");
+
+                    b.HasIndex("InvoiceId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("invoice_details");
+                });
+
+            modelBuilder.Entity("ApiPruebaIntegrity.Models.InvoicePayForm", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("InvoiceId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PayFormId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Total")
+                        .HasColumnType("decimal(7,2)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("invoice_id");
+                    b.HasIndex("InvoiceId");
 
-                    b.ToTable("invoice_details");
+                    b.HasIndex("PayFormId");
+
+                    b.ToTable("invoice_pay_form");
+                });
+
+            modelBuilder.Entity("ApiPruebaIntegrity.Models.PayForm", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("pay_forms");
                 });
 
             modelBuilder.Entity("ApiPruebaIntegrity.Models.Product", b =>
@@ -187,6 +289,9 @@ namespace ApiPruebaIntegrity.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreateAt")
                         .HasColumnType("datetime2");
@@ -212,6 +317,8 @@ namespace ApiPruebaIntegrity.Migrations
                     b.HasIndex("Code")
                         .HasDatabaseName("IX_Product_Code");
 
+                    b.HasIndex("CompanyId");
+
                     b.HasIndex("Description")
                         .HasDatabaseName("IX_Product_Description");
 
@@ -225,6 +332,10 @@ namespace ApiPruebaIntegrity.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("int")
+                        .HasColumnName("company_id");
 
                     b.Property<DateTime>("CreateAt")
                         .HasColumnType("datetime2");
@@ -249,6 +360,16 @@ namespace ApiPruebaIntegrity.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("Rol")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -256,30 +377,106 @@ namespace ApiPruebaIntegrity.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CompanyId");
+
                     b.ToTable("users");
+                });
+
+            modelBuilder.Entity("ApiPruebaIntegrity.Models.Customer", b =>
+                {
+                    b.HasOne("ApiPruebaIntegrity.Models.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Company");
                 });
 
             modelBuilder.Entity("ApiPruebaIntegrity.Models.Invoice", b =>
                 {
-                    b.HasOne("ApiPruebaIntegrity.Models.Invoice", null)
-                        .WithMany("Details")
-                        .HasForeignKey("InvoiceId");
+                    b.HasOne("ApiPruebaIntegrity.Models.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ApiPruebaIntegrity.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ApiPruebaIntegrity.Models.InvoiceDetail", b =>
                 {
                     b.HasOne("ApiPruebaIntegrity.Models.Invoice", "Invoice")
+                        .WithMany("Details")
+                        .HasForeignKey("InvoiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ApiPruebaIntegrity.Models.Product", "Product")
                         .WithMany()
-                        .HasForeignKey("invoice_id")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Invoice");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("ApiPruebaIntegrity.Models.InvoicePayForm", b =>
+                {
+                    b.HasOne("ApiPruebaIntegrity.Models.Invoice", "Invoice")
+                        .WithMany("InvoicePayForm")
+                        .HasForeignKey("InvoiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ApiPruebaIntegrity.Models.PayForm", "PayForm")
+                        .WithMany()
+                        .HasForeignKey("PayFormId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Invoice");
+
+                    b.Navigation("PayForm");
+                });
+
+            modelBuilder.Entity("ApiPruebaIntegrity.Models.Product", b =>
+                {
+                    b.HasOne("ApiPruebaIntegrity.Models.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Company");
+                });
+
+            modelBuilder.Entity("ApiPruebaIntegrity.Models.User", b =>
+                {
+                    b.HasOne("ApiPruebaIntegrity.Models.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Company");
                 });
 
             modelBuilder.Entity("ApiPruebaIntegrity.Models.Invoice", b =>
                 {
                     b.Navigation("Details");
+
+                    b.Navigation("InvoicePayForm");
                 });
 #pragma warning restore 612, 618
         }
