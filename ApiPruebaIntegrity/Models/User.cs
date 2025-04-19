@@ -27,8 +27,6 @@ namespace ApiPruebaIntegrity.Models
         [MaxLength(100)]
         public string Email { set; get; }
 
-
-        [Column("company_id")]
         public int CompanyId { get; set; }
 
         public Company Company { get; set; }
