@@ -76,6 +76,26 @@ namespace ApiPruebaIntegrity.Services.Impl
             return new GenericRespDTO<CustomerRespDTO>("OK", "Customer found success", customerResp);
         }
 
+        public async Task<GenericRespDTO<string>> UpdateCustomer(GenericReqDTO<UpdateCustomerReqDTO> reqDTO, int id)
+        {
+            _logger.LogInformation("UpdateCustomer: {} id: {}", reqDTO, id);
+
+            var customerModel = await RetrieveCustomer(id)
+                 ?? throw new NotFoundException($"Customer with id {id} not exists");
+
+            var newData = reqDTO.Payload;
+
+            customerModel.FullName = newData.FullName;
+            customerModel.CellPhone = newData.CellPhone;
+            customerModel.Address = newData.Address;
+            customerModel.CellPhone = newData.CellPhone;
+
+            await _dBContextTest.SaveChangesAsync();
+
+            return new GenericRespDTO<string>("OK", "Customer updated success", customerModel.Id.ToString());
+
+        }
+
         private async Task<Customer?> RetrieveCustomer(int id)
         {
             return await _dBContextTest

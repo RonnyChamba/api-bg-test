@@ -44,5 +44,16 @@ namespace ApiPruebaIntegrity.Controllers
            return Ok(response);
         }
 
+        [Authorize]
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateCustomer([FromBody] GenericReqDTO<UpdateCustomerReqDTO> reqDTO, int id)
+        { 
+
+            var response = await _customerService.UpdateCustomer(reqDTO, id);
+
+            return Ok(response);
+        
+        }
+
     }
 }
