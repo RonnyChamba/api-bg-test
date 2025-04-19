@@ -17,6 +17,7 @@ builder.Services.AddScoped<IUserService, UserServiceImpl>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationServiceImpl>();
 builder.Services.AddScoped<ICustomerService, CustomerServiceImpl>();
 builder.Services.AddScoped<ISessionService, SessionServiceImpl>();
+builder.Services.AddScoped<IProductService, ProductServiceImpl>();
 
 builder.Services.AddControllers()
     .ConfigureApiBehaviorOptions(options =>
@@ -37,7 +38,8 @@ builder.Services.AddAutoMapper
 (
     typeof(CompanyMappingProfile),
     typeof(UserMappingProfile),
-    typeof(CustomerMappingProfile)
+    typeof(CustomerMappingProfile),
+    typeof(ProductMappingProfile)
 );
 
 // Configurar autenticación con JWT

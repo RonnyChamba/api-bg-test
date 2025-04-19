@@ -22,5 +22,8 @@ namespace ApiPruebaIntegrity.Models
         public decimal Price { set; get; }
         public int SaleCount { set; get; }
         public DateTime CreateAt { set; get; }
+        public int CompanyId { get; set; }
+
+        public Company Company { get; set; }
     }
 }
