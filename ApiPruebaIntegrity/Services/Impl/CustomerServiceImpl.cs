@@ -1,9 +1,11 @@
 ﻿using ApiPruebaIntegrity.Data;
 using ApiPruebaIntegrity.DTOs.Request;
 using ApiPruebaIntegrity.DTOs.Response;
+using ApiPruebaIntegrity.Exceptions;
 using ApiPruebaIntegrity.Models;
 using ApiPruebaIntegrity.Util;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace ApiPruebaIntegrity.Services.Impl
 {
@@ -22,6 +24,7 @@ namespace ApiPruebaIntegrity.Services.Impl
             _mapper = mapper;
             _sessionService = sessionService;
         }
+
         public async Task<GenericRespDTO<string>> SaveCustomer(GenericReqDTO<CustomerReqDTO> reqDTO)
         {
             _logger.LogInformation("Req SaveCustomer: {}", reqDTO);
@@ -34,6 +37,52 @@ namespace ApiPruebaIntegrity.Services.Impl
             await _dBContextTest.SaveChangesAsync();
 
             return new  GenericRespDTO<string>("OK", "User created success", ""); 
+        }
+
+        public async Task<GenericRespDTO<List<CustomerRespDTO>>> FindAllCustomers(string name)
+        {
+            _logger.LogInformation("Name {}", name);
+
+            var idCompany = _sessionService.RetrieveIdCompanySession();
+
+            var query = _dBContextTest
+                .Customers
+                .Where(c => c.CompanyId == idCompany && c.Status.Equals(IntegrityApiConstants.StatusActive));
+
+            if (!string.IsNullOrWhiteSpace(name)) 
+            {
+                query = query.Where(user => user.FullName.Contains(name));
+
+            }
+
+            var listCustomers = await query.ToListAsync();
+            var listRespDTO =_mapper.Map<List<CustomerRespDTO>>(listCustomers);
+
+            return new GenericRespDTO<List<CustomerRespDTO>>("OK", "Transaction successfully processed", listRespDTO);
+
+
+        }
+
+        public async Task<GenericRespDTO<CustomerRespDTO>> FindCustomer(int id)
+        {
+
+            _logger.LogInformation("Id customer: {}", id);
+
+            var customerModel = await RetrieveCustomer(id) 
+                ?? throw new NotFoundException($"Customer with id {id} not exists");
+
+            var customerResp = _mapper.Map<CustomerRespDTO>(customerModel);
+
+            return new GenericRespDTO<CustomerRespDTO>("OK", "Customer found success", customerResp);
+        }
+
+        private async Task<Customer?> RetrieveCustomer(int id)
+        {
+            return await _dBContextTest
+                .Customers
+                .Where(c => c.Id == id && c.Status.Equals(IntegrityApiConstants.StatusActive))
+                .FirstOrDefaultAsync();
+        
         }
     }
 }
