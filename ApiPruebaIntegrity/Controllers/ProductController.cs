@@ -36,5 +36,25 @@ namespace ApiPruebaIntegrity.Controllers
 
             return Ok(response);
         }
+        [Authorize]
+        [HttpGet("{id}")]
+        public async Task<IActionResult> FindProductById(int id)
+        {
+
+            var response = await _productService.FindProductById(id);
+
+            return Ok(response);
+        }
+
+        [Authorize]
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateProduct([FromBody] GenericReqDTO<UpdateProductReqDTO> reqDTO, int id)
+        {
+
+            var response = await _productService.UpdateProduct(reqDTO, id);
+
+            return Ok(response);
+        }
+
     }
 }
