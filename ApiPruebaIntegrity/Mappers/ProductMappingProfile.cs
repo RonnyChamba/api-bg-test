@@ -1,4 +1,5 @@
 ﻿using ApiPruebaIntegrity.DTOs.Request;
+using ApiPruebaIntegrity.DTOs.Response;
 using ApiPruebaIntegrity.Models;
 using AutoMapper;
 
@@ -10,6 +11,7 @@ namespace ApiPruebaIntegrity.Mappers
         {
 
             CreateMap<ProductReqDTO, Product>();
+            CreateMap<Product, ProductRespDTO>();
         }
     }
 }

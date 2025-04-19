@@ -4,6 +4,7 @@ using ApiPruebaIntegrity.DTOs.Response;
 using ApiPruebaIntegrity.Models;
 using ApiPruebaIntegrity.Util;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace ApiPruebaIntegrity.Services.Impl
 {
@@ -21,6 +22,33 @@ namespace ApiPruebaIntegrity.Services.Impl
             _dBContextTest = dBContextTest;
             _sessionService = sessionService;
         }
+
+        public async Task<GenericRespDTO<List<ProductRespDTO>>> FindAllProducts(string paramFilter)
+        {
+
+            _logger.LogInformation("Req FindAllProducts : {}", paramFilter);
+
+            int companyId = _sessionService.RetrieveIdCompanySession();
+
+            var query = _dBContextTest
+                .Products
+                .Where(p => p.CompanyId == companyId && 
+                       p.Status.Equals(IntegrityApiConstants.StatusActive));
+
+            if (!string.IsNullOrWhiteSpace(paramFilter)) 
+            {
+                query = query.Where(p => p.Code.ToUpper().Contains(paramFilter) 
+                                 || p.Description.ToUpper().Contains(paramFilter));
+            }
+
+            var productList = await query.ToListAsync();
+
+            var listDTOs = _mapper.Map<List<ProductRespDTO>>(productList);
+
+            return new GenericRespDTO<List<ProductRespDTO>> ("OK","Operation Success", listDTOs);
+            
+        }
+
         public async Task<GenericRespDTO<string>> SaveProduct(GenericReqDTO<ProductReqDTO> reqDTO)
         {
             _logger.LogInformation("Req SaveProduct: {}", reqDTO);

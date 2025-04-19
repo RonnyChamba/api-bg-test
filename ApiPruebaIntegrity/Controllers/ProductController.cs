@@ -26,5 +26,15 @@ namespace ApiPruebaIntegrity.Controllers
 
             return Ok(response);
         }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> FindAllProducts(string? paramFilter)
+        {
+
+            var response = await _productService.FindAllProducts(paramFilter??"");
+
+            return Ok(response);
+        }
     }
 }
