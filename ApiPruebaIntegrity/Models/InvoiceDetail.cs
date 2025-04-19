@@ -20,12 +20,10 @@ namespace ApiPruebaIntegrity.Models
         public decimal Amount { get; set; }
 
         public decimal Subtotal { get; set; }
-
-        [ForeignKey("invoice_id")]
         public Invoice Invoice { get; set; }
-
-        [ForeignKey("product_id")]
+        public int InvoiceId { get; set; }
         public Product Product { get; set; }
+        public int ProductId { get; set; }
 
     }
 }

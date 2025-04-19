@@ -14,12 +14,12 @@ namespace ApiPruebaIntegrity.Models
 
         [Column(TypeName = "decimal(7,2)")]
         public decimal Total { set; get; }
-
-        [ForeignKey("invoice_id")]
         public Invoice Invoice { get; set; }
+        public int InvoiceId { get; set; }
 
-        [ForeignKey("pay_form_id")]
         public PayForm PayForm { get; set; }
+
+        public int PayFormId { get; set; }
 
     }
 }

@@ -45,11 +45,13 @@ namespace ApiPruebaIntegrity.Models
 
         public List<InvoiceDetail> Details { get; set; } = new List<InvoiceDetail>();
 
-        [ForeignKey("customer_id")]
-        public Customer customer { get; set; }
+        public Customer Customer { get; set; }
 
-        [ForeignKey("user_id")]
+        public int CustomerId { get; set; }
+
         public User User { get; set; }
+
+        public int UserId { get; set; }
 
         public List<InvoicePayForm> InvoicePayForm { get; set; } = new List<InvoicePayForm>();
     }

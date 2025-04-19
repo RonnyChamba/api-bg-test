@@ -4,6 +4,7 @@ using ApiPruebaIntegrity.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ApiPruebaIntegrity.Migrations
 {
     [DbContext(typeof(DBContextTest))]
-    partial class DBContextTestModelSnapshot : ModelSnapshot
+    [Migration("20250419062335_AddFieldRelationInvoiceTable")]
+    partial class AddFieldRelationInvoiceTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -114,7 +117,7 @@ namespace ApiPruebaIntegrity.Migrations
                     b.Property<DateTime>("CreateAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("CustomerId")
+                    b.Property<int>("CustomerIdId")
                         .HasColumnType("int");
 
                     b.Property<string>("EmailCustomer")
@@ -159,7 +162,13 @@ namespace ApiPruebaIntegrity.Migrations
                     b.Property<decimal>("Total")
                         .HasColumnType("decimal(7,2)");
 
-                    b.Property<int>("UserId")
+                    b.Property<int>("UserId1")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserIdId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("customerId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -167,7 +176,7 @@ namespace ApiPruebaIntegrity.Migrations
                     b.HasIndex("CreateAt")
                         .HasDatabaseName("IX_Invoice_CreateAt");
 
-                    b.HasIndex("CustomerId");
+                    b.HasIndex("CustomerIdId");
 
                     b.HasIndex("FullNameCustomer")
                         .HasDatabaseName("IX_Invoice_FullNameCustomer");
@@ -178,7 +187,11 @@ namespace ApiPruebaIntegrity.Migrations
                     b.HasIndex("Total")
                         .HasDatabaseName("IX_Invoice_Total");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId1");
+
+                    b.HasIndex("UserIdId");
+
+                    b.HasIndex("customerId");
 
                     b.ToTable("invoices");
                 });
@@ -205,12 +218,16 @@ namespace ApiPruebaIntegrity.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("InvoiceId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("invoice_id");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(7,2)");
 
-                    b.Property<int>("ProductId")
+                    b.Property<int>("ProductId1")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductIdId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Subtotal")
@@ -220,7 +237,9 @@ namespace ApiPruebaIntegrity.Migrations
 
                     b.HasIndex("InvoiceId");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("ProductId1");
+
+                    b.HasIndex("ProductIdId");
 
                     b.ToTable("invoice_details");
                 });
@@ -238,20 +257,20 @@ namespace ApiPruebaIntegrity.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("InvoiceId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PayFormId")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("Total")
                         .HasColumnType("decimal(7,2)");
 
+                    b.Property<int>("invoice_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("pay_form_id")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("InvoiceId");
+                    b.HasIndex("invoice_id");
 
-                    b.HasIndex("PayFormId");
+                    b.HasIndex("pay_form_id");
 
                     b.ToTable("invoice_pay_form");
                 });
@@ -392,21 +411,37 @@ namespace ApiPruebaIntegrity.Migrations
 
             modelBuilder.Entity("ApiPruebaIntegrity.Models.Invoice", b =>
                 {
-                    b.HasOne("ApiPruebaIntegrity.Models.Customer", "Customer")
+                    b.HasOne("ApiPruebaIntegrity.Models.Customer", "CustomerId")
                         .WithMany()
-                        .HasForeignKey("CustomerId")
+                        .HasForeignKey("CustomerIdId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("ApiPruebaIntegrity.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("UserId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Customer");
+                    b.HasOne("ApiPruebaIntegrity.Models.User", "UserId")
+                        .WithMany()
+                        .HasForeignKey("UserIdId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ApiPruebaIntegrity.Models.Customer", "customer")
+                        .WithMany()
+                        .HasForeignKey("customerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CustomerId");
 
                     b.Navigation("User");
+
+                    b.Navigation("UserId");
+
+                    b.Navigation("customer");
                 });
 
             modelBuilder.Entity("ApiPruebaIntegrity.Models.InvoiceDetail", b =>
@@ -419,26 +454,34 @@ namespace ApiPruebaIntegrity.Migrations
 
                     b.HasOne("ApiPruebaIntegrity.Models.Product", "Product")
                         .WithMany()
-                        .HasForeignKey("ProductId")
+                        .HasForeignKey("ProductId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ApiPruebaIntegrity.Models.Product", "ProductId")
+                        .WithMany()
+                        .HasForeignKey("ProductIdId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Invoice");
 
                     b.Navigation("Product");
+
+                    b.Navigation("ProductId");
                 });
 
             modelBuilder.Entity("ApiPruebaIntegrity.Models.InvoicePayForm", b =>
                 {
                     b.HasOne("ApiPruebaIntegrity.Models.Invoice", "Invoice")
                         .WithMany("InvoicePayForm")
-                        .HasForeignKey("InvoiceId")
+                        .HasForeignKey("invoice_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("ApiPruebaIntegrity.Models.PayForm", "PayForm")
                         .WithMany()
-                        .HasForeignKey("PayFormId")
+                        .HasForeignKey("pay_form_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
