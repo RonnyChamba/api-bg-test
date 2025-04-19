@@ -56,5 +56,15 @@ namespace ApiPruebaIntegrity.Controllers
             return Ok(response);
         }
 
+        [Authorize]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteProduct(int id)
+        { 
+            var response = await _productService.DeleteProduct(id);
+
+            return Ok(response);
+        
+        }
+
     }
 }

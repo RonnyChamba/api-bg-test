@@ -95,6 +95,22 @@ namespace ApiPruebaIntegrity.Services.Impl
 
         }
 
+        public async Task<GenericRespDTO<string>> DeleteProduct(int id)
+        {
+
+            _logger.LogInformation("Id product delete: {}", id);
+
+            var productModel = await RetrieveProducById(id) ??
+                               throw new NotFoundException($"Product with id {id} not exists");
+
+            productModel.Status = IntegrityApiConstants.StatusDelete;
+
+            await _dBContextTest.SaveChangesAsync();
+
+            return new GenericRespDTO<string>("OK", "Product successfully delete", productModel.Id.ToString());
+
+        }
+
         private async Task<Product?> RetrieveProducById(int id)
         { 
 
