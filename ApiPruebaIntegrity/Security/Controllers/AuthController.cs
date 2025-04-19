@@ -16,7 +16,7 @@ namespace ApiPruebaIntegrity.Security.Controllers
         }
 
         [HttpPost]
-        [Route("/login")]
+        [Route("login")]
         public async Task<IActionResult> AuthUser([FromBody] GenericReqDTO<LoginReqDTO> reqDTO) { 
         
             var response = await _authenticationService.AuthUser(reqDTO);

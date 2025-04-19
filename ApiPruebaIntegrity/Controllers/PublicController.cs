@@ -17,7 +17,7 @@ namespace ApiPruebaIntegrity.Controllers
         }
 
         [HttpPost]
-        [Route("/register-company")]
+        [Route("register-company")]
         public async Task<IActionResult> SaveCompany([FromBody] GenericReqDTO<CompanyReqDTO> reqDTO) {
 
             var response = await _userService.SaveCompany(reqDTO);
