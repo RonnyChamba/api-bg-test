@@ -96,6 +96,20 @@ namespace ApiPruebaIntegrity.Services.Impl
 
         }
 
+        public async Task<GenericRespDTO<string>> DeleteCustomer(int id)
+        {
+            _logger.LogInformation("Id customer delete: {}", id);
+
+            var customerModel = await RetrieveCustomer(id)
+                   ?? throw new NotFoundException($"Customer with id {id} not exists");
+            customerModel.Status = IntegrityApiConstants.StatusDelete;
+
+            await _dBContextTest.SaveChangesAsync();
+
+            return new GenericRespDTO<string>("OK", "Customer deleted success", customerModel.Id.ToString());
+
+        }
+
         private async Task<Customer?> RetrieveCustomer(int id)
         {
             return await _dBContextTest
