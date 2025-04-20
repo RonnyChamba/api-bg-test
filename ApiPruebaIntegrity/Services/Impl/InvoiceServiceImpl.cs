@@ -15,12 +15,14 @@ namespace ApiPruebaIntegrity.Services.Impl
         private readonly ILogger<InvoiceServiceImpl> _logger;
         private readonly DBContextTest _dBContextTest;
         private readonly IMapper _mapper;
+        private readonly ISessionService _sessionService;
 
-        public InvoiceServiceImpl(ILogger<InvoiceServiceImpl> logger, DBContextTest dBContextTest, IMapper mapper)
+        public InvoiceServiceImpl(ILogger<InvoiceServiceImpl> logger, DBContextTest dBContextTest, IMapper mapper, ISessionService sessionService)
         { 
             _logger = logger;
             _dBContextTest = dBContextTest;
             _mapper = mapper;
+            _sessionService = sessionService;
         
         }
         public async Task<GenericRespDTO<string>> CreateInvoice(GenericReqDTO<InvoiceReqDTO> reqDTO)
@@ -46,13 +48,14 @@ namespace ApiPruebaIntegrity.Services.Impl
 
         private void SetInfoGeneralInvoice(InvoiceReqDTO invoiceReqDTO, Invoice invoice) {
 
-            invoice.InvoiceNumber = "124344363435";
+            invoice.InvoiceNumber = "124344363436";
             invoice.PorcentajeIva = invoiceReqDTO.PorcentajeIva;
             invoice.IvaValue = invoiceReqDTO.IvaValue;
             invoice.StatusPay = invoiceReqDTO.StatusPay;
             invoice.Status = IntegrityApiConstants.StatusActive;
             invoice.SubTotal = invoiceReqDTO.SubTotal;
             invoice.Total = invoiceReqDTO.Total;
+            invoice.CompanyId = _sessionService.RetrieveIdCompanySession();
         }
 
         private async Task SetInfoCustomerInvoice(InvoiceReqDTO invoiceReqDTO, Invoice invoice) { 

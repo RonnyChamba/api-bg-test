@@ -52,6 +52,7 @@ namespace ApiPruebaIntegrity.Models
 
         public int UserId { get; set; }
 
+        public int CompanyId { set; get; }
         public List<InvoicePayForm> InvoicePayForm { get; set; } = new List<InvoicePayForm>();
     }
 }
