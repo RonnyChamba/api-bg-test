@@ -49,6 +49,7 @@ namespace ApiPruebaIntegrity.Services.Impl
         private async Task SetInfoGeneralInvoice(InvoiceReqDTO invoiceReqDTO, Invoice invoice) {
 
             invoice.InvoiceNumber = await GenerateSequentialInvoice();
+            invoice.CreateAt = DateUtil.GetDateTimeFromString(invoiceReqDTO.CreateAt);
             invoice.PorcentajeIva = invoiceReqDTO.PorcentajeIva;
             invoice.IvaValue = invoiceReqDTO.IvaValue;
             invoice.StatusPay = invoiceReqDTO.StatusPay;
