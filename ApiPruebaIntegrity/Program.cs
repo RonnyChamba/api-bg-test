@@ -40,7 +40,8 @@ builder.Services.AddAutoMapper
     typeof(CompanyMappingProfile),
     typeof(UserMappingProfile),
     typeof(CustomerMappingProfile),
-    typeof(ProductMappingProfile)
+    typeof(ProductMappingProfile),
+    typeof(InvoiceMappingProfile)
 );
 
 // Configurar autenticación con JWT

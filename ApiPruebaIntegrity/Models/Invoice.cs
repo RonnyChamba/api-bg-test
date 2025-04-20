@@ -26,9 +26,6 @@ namespace ApiPruebaIntegrity.Models
         [MaxLength(20)]
         public string Status { set; get; }
 
-        [MaxLength(50)]
-        public string PayForm { set; get; }
-
         [Column(TypeName = "decimal(7,2)")]
         public decimal PorcentajeIva { set; get; }
 
@@ -37,6 +34,8 @@ namespace ApiPruebaIntegrity.Models
 
         [Column(TypeName = "decimal(7,2)")]
         public decimal SubTotal { set; get; }
+
+        public string StatusPay { set; get; }
 
         [Column(TypeName = "decimal(7,2)")]
         public decimal Total { set; get; }

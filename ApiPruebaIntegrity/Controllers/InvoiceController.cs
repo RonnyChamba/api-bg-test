@@ -22,7 +22,6 @@ namespace ApiPruebaIntegrity.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateInvoice([FromBody] GenericReqDTO<InvoiceReqDTO> reqDTO)
         {
-
             var response = await _invoiceService.CreateInvoice(reqDTO);
 
             return Ok(response);

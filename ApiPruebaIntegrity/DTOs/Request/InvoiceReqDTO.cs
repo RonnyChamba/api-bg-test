@@ -23,15 +23,18 @@ namespace ApiPruebaIntegrity.DTOs.Request
         [Required(ErrorMessage = "The total field is required")]
         decimal Total,
 
-        [Required(ErrorMessage = "The invoiceDetails field is required")]
-        [MinLength(1, ErrorMessage = "At least one invoiceDetails must be provided.")]
-        List<InvoiceDetailReqDTO> InvoiceDetails,
+        [Required(ErrorMessage = "The details field is required")]
+        [MinLength(1, ErrorMessage = "At least one details must be provided.")]
+        List<InvoiceDetailReqDTO> Details,
 
         [Required(ErrorMessage = "The customerId field is required")]
         int CustomerId,
 
+        [Required(ErrorMessage = "The customerId field is required")]
+        int UserId,
+
         [Required(ErrorMessage = "The InvoicePayForm field is required")]
         [MinLength(1, ErrorMessage = "At least one invoicePayForm must be provided.")]
-        List<InvoicePayFormReqDTO> InvoicePayForm   
+        List<InvoicePayFormReqDTO> InvoicePayForm
     );
 }

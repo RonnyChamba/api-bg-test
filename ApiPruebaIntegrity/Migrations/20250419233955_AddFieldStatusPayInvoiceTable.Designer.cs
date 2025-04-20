@@ -4,6 +4,7 @@ using ApiPruebaIntegrity.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ApiPruebaIntegrity.Migrations
 {
     [DbContext(typeof(DBContextTest))]
-    partial class DBContextTestModelSnapshot : ModelSnapshot
+    [Migration("20250419233955_AddFieldStatusPayInvoiceTable")]
+    partial class AddFieldStatusPayInvoiceTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -139,6 +142,11 @@ namespace ApiPruebaIntegrity.Migrations
 
                     b.Property<decimal>("IvaValue")
                         .HasColumnType("decimal(7,2)");
+
+                    b.Property<string>("PayForm")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<decimal>("PorcentajeIva")
                         .HasColumnType("decimal(7,2)");

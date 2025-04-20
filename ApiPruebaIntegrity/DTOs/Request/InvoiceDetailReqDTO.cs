@@ -4,8 +4,8 @@ namespace ApiPruebaIntegrity.DTOs.Request
 {
     public record InvoiceDetailReqDTO(
 
-         [Required(ErrorMessage = "The Id field is required")]
-         int Id,
+         [Required(ErrorMessage = "The productId field is required")]
+         int ProductId,
 
          [Required(ErrorMessage = "The description field is required")]
          string Description,
