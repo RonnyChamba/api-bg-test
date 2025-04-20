@@ -21,6 +21,7 @@ builder.Services.AddScoped<IProductService, ProductServiceImpl>();
 builder.Services.AddScoped<IInvoiceService, InvoiceServiceImpl>();
 builder.Services.AddScoped<IReportService, ReportServiceImpl>();
 builder.Services.AddScoped<IPdfService, PdfServiceImpl>();
+builder.Services.AddScoped<IHelperService, HelperServiceImpl>();
 
 builder.Services.AddControllers()
     .ConfigureApiBehaviorOptions(options =>
@@ -43,7 +44,8 @@ builder.Services.AddAutoMapper
     typeof(UserMappingProfile),
     typeof(CustomerMappingProfile),
     typeof(ProductMappingProfile),
-    typeof(InvoiceMappingProfile)
+    typeof(InvoiceMappingProfile),
+    typeof(UtilMappingProfile)
 );
 
 // Configurar autenticación con JWT
