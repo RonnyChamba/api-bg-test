@@ -1,9 +1,11 @@
-﻿namespace ApiPruebaIntegrity.DTOs.Request
+﻿using ApiPruebaIntegrity.Enums;
+
+namespace ApiPruebaIntegrity.DTOs.Request
 {
     public record FilterInvoiceReqDTO(
     
-        string ValueFilter,
-        string FilterType,
-        string OperatorType
+        string? ValueFilter,
+        InvoiceFilterTypeEnum? InvoiceFilterType,
+        ComparisonOperatorEnum? ComparisonOperator
     );
 }

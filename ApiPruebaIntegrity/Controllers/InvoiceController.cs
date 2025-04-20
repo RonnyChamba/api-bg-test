@@ -1,5 +1,7 @@
 ﻿using ApiPruebaIntegrity.DTOs.Request;
+using ApiPruebaIntegrity.Enums;
 using ApiPruebaIntegrity.Services;
+using ApiPruebaIntegrity.Util;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,9 +32,15 @@ namespace ApiPruebaIntegrity.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> FindAllInvoice() {
+        public async Task<IActionResult> FindAllInvoice(string? valueFilter,
+                                                        InvoiceFilterTypeEnum? invoiceFilterType,
+                                                        ComparisonOperatorEnum? comparisonOperator) {
 
-            var response = await _invoiceService.FindAllInvoice(null); 
+            var response = await _invoiceService.FindAllInvoice(FilterUtil.GenericReqFilterInvoice(
+                valueFilter,
+                invoiceFilterType,
+                comparisonOperator
+                ));
 
             return Ok(response);
         }

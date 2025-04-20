@@ -1,6 +1,7 @@
 ﻿using ApiPruebaIntegrity.Data;
 using ApiPruebaIntegrity.DTOs.Request;
 using ApiPruebaIntegrity.DTOs.Response;
+using ApiPruebaIntegrity.Enums;
 using ApiPruebaIntegrity.Exceptions;
 using ApiPruebaIntegrity.Models;
 using ApiPruebaIntegrity.Util;
@@ -112,12 +113,14 @@ namespace ApiPruebaIntegrity.Services.Impl
 
             var companyId = _sessionService.RetrieveIdCompanySession();
 
-            var invoicesModel = await _dBContextTest
+            var query = _dBContextTest
                 .Invoices
-                .Where(x => x.CompanyId == companyId  && 
-                            x.Status.Equals(IntegrityApiConstants.StatusActive))
-                .ToListAsync();
+                .Where(x => x.CompanyId == companyId &&
+                            x.Status.Equals(IntegrityApiConstants.StatusActive));
 
+            query = FilterUtil.ApplyFilter(query, reqDTO.Payload);
+
+            var invoicesModel = await query.ToListAsync();
             var invoicesResp = _mapper.Map<List<InvoiceRespDTO>>(invoicesModel);
 
             return new GenericRespDTO<List<InvoiceRespDTO>> ("OK", "Operation Success", invoicesResp);
