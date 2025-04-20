@@ -10,3 +10,8 @@ VALUES
 ('Cheque'),
 ('Transferencia Bancaria'),
 ('Crédito');
+
+
+-- registrar secuencial inicial
+INSERT INTO [PRUEBA_INTEGRITY_BG].[dbo].[InvoiceSequences] ( [LastNumber])
+VALUES (0);
