@@ -46,7 +46,7 @@ namespace ApiPruebaIntegrity.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("company");
+                    b.ToTable("company", (string)null);
                 });
 
             modelBuilder.Entity("ApiPruebaIntegrity.Models.Customer", b =>
@@ -95,7 +95,7 @@ namespace ApiPruebaIntegrity.Migrations
                     b.HasIndex("FullName")
                         .HasDatabaseName("IX_User_FullName");
 
-                    b.ToTable("customers");
+                    b.ToTable("customers", (string)null);
                 });
 
             modelBuilder.Entity("ApiPruebaIntegrity.Models.Invoice", b =>
@@ -182,7 +182,7 @@ namespace ApiPruebaIntegrity.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("invoices");
+                    b.ToTable("invoices", (string)null);
                 });
 
             modelBuilder.Entity("ApiPruebaIntegrity.Models.InvoiceDetail", b =>
@@ -224,7 +224,7 @@ namespace ApiPruebaIntegrity.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("invoice_details");
+                    b.ToTable("invoice_details", (string)null);
                 });
 
             modelBuilder.Entity("ApiPruebaIntegrity.Models.InvoicePayForm", b =>
@@ -255,7 +255,7 @@ namespace ApiPruebaIntegrity.Migrations
 
                     b.HasIndex("PayFormId");
 
-                    b.ToTable("invoice_pay_form");
+                    b.ToTable("invoice_pay_form", (string)null);
                 });
 
             modelBuilder.Entity("ApiPruebaIntegrity.Models.InvoiceSequence", b =>
@@ -271,7 +271,7 @@ namespace ApiPruebaIntegrity.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("InvoiceSequences");
+                    b.ToTable("InvoiceSequences", (string)null);
                 });
 
             modelBuilder.Entity("ApiPruebaIntegrity.Models.PayForm", b =>
@@ -289,7 +289,7 @@ namespace ApiPruebaIntegrity.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("pay_forms");
+                    b.ToTable("pay_forms", (string)null);
                 });
 
             modelBuilder.Entity("ApiPruebaIntegrity.Models.Product", b =>
@@ -337,7 +337,7 @@ namespace ApiPruebaIntegrity.Migrations
                     b.HasIndex("Description")
                         .HasDatabaseName("IX_Product_Description");
 
-                    b.ToTable("products");
+                    b.ToTable("products", (string)null);
                 });
 
             modelBuilder.Entity("ApiPruebaIntegrity.Models.Template", b =>
@@ -355,7 +355,7 @@ namespace ApiPruebaIntegrity.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Templates");
+                    b.ToTable("Templates", (string)null);
                 });
 
             modelBuilder.Entity("ApiPruebaIntegrity.Models.User", b =>
@@ -411,7 +411,7 @@ namespace ApiPruebaIntegrity.Migrations
 
                     b.HasIndex("CompanyId");
 
-                    b.ToTable("users");
+                    b.ToTable("users", (string)null);
                 });
 
             modelBuilder.Entity("ApiPruebaIntegrity.Models.Customer", b =>

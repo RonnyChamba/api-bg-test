@@ -4,24 +4,63 @@ namespace ApiPruebaIntegrity.Util
 {
     public class PdfUtil
     {
-        public static Dictionary<string, string> GenerateKeysInvoicePdf(Invoice invoice)
+        public static Dictionary<string, string> GenerateKeysInvoicePdf(Invoice invoice, Company company)
         {
 
             Dictionary<string, string> mapValues = new Dictionary<string, string>();
-            //mapValues.Add("[KEY_COMPANY_NAME]", ConstantVeagro.COMPANY_NAME);
-            //mapValues.Add("[KEY_COMPANY_ADDRESS]", ConstantVeagro.COMPANY_ADDRESS);
-            //mapValues.Add("[KEY_COMPANY_TLF]", "092325634O");
-            //mapValues.Add("[KEY_INVOICE_NUMBER]", $"{sale.Id}");
-            //mapValues.Add("[KEY_DATE_CREATE]", $"{sale.CreateDate}");
-            //mapValues.Add("[KEY_FULLNAME_CUSTOMER]", sale.Name);
-            //mapValues.Add("[KEY_TLF_CUSTOMER]", sale.Cellphone ?? "NA");
-            //mapValues.Add("[KEY_EMAIL_CUSTOMER]", sale.Email ?? "NA");
-            //mapValues.Add("[KEY_ADDRESS_CUSTOMER]", sale.Address ?? "NA");
-            //mapValues.Add("[KEY_ROWS_DETAILS]", TemplateUtil.GenerarRowsDetailsSale(sale.Details));
-            //mapValues.Add("[KEY_TOTAL_SALE]", sale.Total.ToString());
+            mapValues.Add("[KEY_COMPANY_NAME]", company.FullName);
+            mapValues.Add("[KEY_COMPANY_ADDRESS]", company.City);
+            mapValues.Add("[KEY_INVOICE_NUMBER]", invoice.InvoiceNumber);
+            mapValues.Add("[KEY_DATE_CREATE]", $"{invoice.CreateAt}");
+            mapValues.Add("[KEY_FULLNAME_CUSTOMER]", invoice.FullNameCustomer);
+            mapValues.Add("[KEY_TLF_CUSTOMER]", invoice.CellPhoneCustomer);
+            mapValues.Add("[KEY_EMAIL_CUSTOMER]", invoice.EmailCustomer);
+            mapValues.Add("[KEY_FULLNAME_USER]", invoice.FullNameUser.ToString());
+            mapValues.Add("[KEY_PORCENTAJE_IVA]", invoice.PorcentajeIva.ToString());
+            mapValues.Add("[KEY_VALOR_IVA]", invoice.IvaValue.ToString());
+            mapValues.Add("[KEY_SUBTOTAL]", invoice.SubTotal.ToString());
+            mapValues.Add("[KEY_DETAILS]", GenerarRowsDetailsInvoice(invoice.Details));
+            mapValues.Add("[KEY_PAY_FORMS]", GenerarRowsPayFormsInvoice(invoice.InvoicePayForm));
+            mapValues.Add("[KEY_TOTAL]", invoice.Total.ToString());
 
 
             return mapValues;
+        }
+
+
+        public static string GenerarRowsDetailsInvoice(List<InvoiceDetail> invoiceDetails)
+        {
+            string tablaHtml = "";
+            int index = 1;
+            foreach (var detail in invoiceDetails)
+            {
+                tablaHtml += $"""
+                    <tr>
+                        <td>{index}</td>
+                        <td>{detail.Amount}</td>
+                        <td >{detail.Description}</td>
+                        <td class="text-right">{detail.Price}</td>
+                        <td class="text-right">${detail.Subtotal:F2}</td>
+                    </tr>
+                    """;
+                index++;
+            }
+            return tablaHtml;
+        }
+
+        public static string GenerarRowsPayFormsInvoice(List<InvoicePayForm> invoicePayForm)
+        {
+            string tablaHtml = "";
+            foreach (var payForm in invoicePayForm)
+            {
+                tablaHtml += $"""
+                    <tr>
+                        <td>{payForm.Description}</td>
+                        <td class="text-right">{payForm.Total}</td>
+                    </tr>
+                    """;
+            }
+            return tablaHtml;
         }
     }
 }

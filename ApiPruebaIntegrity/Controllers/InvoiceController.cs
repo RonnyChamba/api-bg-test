@@ -1,4 +1,5 @@
 ﻿using ApiPruebaIntegrity.DTOs.Request;
+using ApiPruebaIntegrity.DTOs.Response;
 using ApiPruebaIntegrity.Enums;
 using ApiPruebaIntegrity.Services;
 using ApiPruebaIntegrity.Util;
@@ -13,10 +14,12 @@ namespace ApiPruebaIntegrity.Controllers
     {
 
         public readonly IInvoiceService _invoiceService;
+        private readonly IReportService _reportService;
 
-        public InvoiceController(IInvoiceService invoiceService)
+        public InvoiceController(IInvoiceService invoiceService, IReportService reportService)
         { 
             _invoiceService = invoiceService;
+            _reportService = reportService;
         
         }
 
@@ -62,6 +65,17 @@ namespace ApiPruebaIntegrity.Controllers
             var response = await _invoiceService.UpdateInvoice(reqDTO, id);
 
             return Ok(response);
+        }
+
+        [Authorize]
+        [HttpGet("{id}/report-pdf")]
+        public async Task<IActionResult> GenerateReportPdfInvoice(int id)
+        {
+            var response = await _reportService.GeneratPdfInvoice(id);
+
+            byte[] fileBytes = FileUtil.ReadAndDeletePdf(response.Data);
+
+            return File(fileBytes, "application/pdf", "report_invoice.pdf");
         }
 
         [Authorize]

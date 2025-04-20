@@ -19,6 +19,8 @@ builder.Services.AddScoped<ICustomerService, CustomerServiceImpl>();
 builder.Services.AddScoped<ISessionService, SessionServiceImpl>();
 builder.Services.AddScoped<IProductService, ProductServiceImpl>();
 builder.Services.AddScoped<IInvoiceService, InvoiceServiceImpl>();
+builder.Services.AddScoped<IReportService, ReportServiceImpl>();
+builder.Services.AddScoped<IPdfService, PdfServiceImpl>();
 
 builder.Services.AddControllers()
     .ConfigureApiBehaviorOptions(options =>
