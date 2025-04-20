@@ -18,6 +18,7 @@ namespace ApiPruebaIntegrity.Data
         public DbSet<PayForm> PayForms { get; set; }
         public DbSet<InvoicePayForm> InvoicePayForm { get; set; }
         public DbSet<Company> Companies { get; set; }
+        public DbSet<InvoiceSequence> InvoiceSequences { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

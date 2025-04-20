@@ -18,12 +18,12 @@ namespace ApiPruebaIntegrity.Services.Impl
         private readonly ISessionService _sessionService;
 
         public InvoiceServiceImpl(ILogger<InvoiceServiceImpl> logger, DBContextTest dBContextTest, IMapper mapper, ISessionService sessionService)
-        { 
+        {
             _logger = logger;
             _dBContextTest = dBContextTest;
             _mapper = mapper;
             _sessionService = sessionService;
-        
+
         }
         public async Task<GenericRespDTO<string>> CreateInvoice(GenericReqDTO<InvoiceReqDTO> reqDTO)
         {
@@ -33,7 +33,7 @@ namespace ApiPruebaIntegrity.Services.Impl
             var invoice = new Invoice();
 
             var dataReqInvoice = reqDTO.Payload;
-            SetInfoGeneralInvoice(dataReqInvoice, invoice);
+            await SetInfoGeneralInvoice(dataReqInvoice, invoice);
             await SetInfoCustomerInvoice(dataReqInvoice, invoice);
             await SetInfoUserInvoice(dataReqInvoice, invoice);
             invoice.Details = _mapper.Map<List<InvoiceDetail>>(dataReqInvoice.Details);
@@ -46,9 +46,9 @@ namespace ApiPruebaIntegrity.Services.Impl
             return new GenericRespDTO<string>("OK", "Invoice generate success", "");
         }
 
-        private void SetInfoGeneralInvoice(InvoiceReqDTO invoiceReqDTO, Invoice invoice) {
+        private async Task SetInfoGeneralInvoice(InvoiceReqDTO invoiceReqDTO, Invoice invoice) {
 
-            invoice.InvoiceNumber = "124344363436";
+            invoice.InvoiceNumber = await GenerateSequentialInvoice();
             invoice.PorcentajeIva = invoiceReqDTO.PorcentajeIva;
             invoice.IvaValue = invoiceReqDTO.IvaValue;
             invoice.StatusPay = invoiceReqDTO.StatusPay;
@@ -58,8 +58,8 @@ namespace ApiPruebaIntegrity.Services.Impl
             invoice.CompanyId = _sessionService.RetrieveIdCompanySession();
         }
 
-        private async Task SetInfoCustomerInvoice(InvoiceReqDTO invoiceReqDTO, Invoice invoice) { 
-        
+        private async Task SetInfoCustomerInvoice(InvoiceReqDTO invoiceReqDTO, Invoice invoice) {
+
             var customerId = invoiceReqDTO.CustomerId;
 
             var customerModel = await _dBContextTest
@@ -71,14 +71,14 @@ namespace ApiPruebaIntegrity.Services.Impl
             invoice.CellPhoneCustomer = customerModel.CellPhone;
             invoice.CustomerId = customerModel.Id;
             invoice.EmailCustomer = customerModel.Email;
-            invoice.FullNameCustomer = customerModel.FullName;   
+            invoice.FullNameCustomer = customerModel.FullName;
         }
 
         private async Task SetInfoUserInvoice(InvoiceReqDTO invoiceReqDTO, Invoice invoice) {
 
             var userId = invoiceReqDTO.UserId;
 
-           
+
             var userModel = await _dBContextTest
                 .Users
                 .Where(x => x.Id == userId && x.Status.Equals(IntegrityApiConstants.StatusActive))
@@ -87,6 +87,22 @@ namespace ApiPruebaIntegrity.Services.Impl
 
             invoice.UserId = userId;
             invoice.FullNameUser = $"{userModel.Names} {userModel.LasName}";
+        }
+
+        private async Task<string> GenerateSequentialInvoice() {
+
+
+            var sequence = await _dBContextTest
+                .InvoiceSequences
+                .FindAsync(1) ?? throw new NotFoundException("No sequence configured for invoices.");
+
+            _logger.LogInformation("Current sequence: {}", sequence.LastNumber);
+
+            sequence.LastNumber++;
+
+            await _dBContextTest.SaveChangesAsync();
+
+            return sequence.LastNumber.ToString("D10");
         }
 
     }
