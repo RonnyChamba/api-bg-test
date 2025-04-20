@@ -48,6 +48,17 @@ builder.Services.AddAutoMapper
     typeof(UtilMappingProfile)
 );
 
+// configuration de cors
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
 // Configurar autenticación con JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -80,6 +91,8 @@ app.UseHttpsRedirection();
 // Habilitar autenticación y autorización en la app
 app.UseAuthorization();
 app.UseAuthorization();
+
+app.UseCors();
 
 app.MapControllers();
 
