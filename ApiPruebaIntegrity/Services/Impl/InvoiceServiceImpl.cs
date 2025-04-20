@@ -135,13 +135,31 @@ namespace ApiPruebaIntegrity.Services.Impl
                 .Invoices
                 .Include(x => x.Details)
                 .Include(x => x.InvoicePayForm)
-                .Where (x => x.Id == id)
+                .Where (x => x.Id == id && x.Status.Equals(IntegrityApiConstants.StatusActive))
                 .FirstOrDefaultAsync()
                 ?? throw new NotFoundException($"Invoice with id {id} not exists");
 
            var invoiceFullResp = _mapper.Map<RetrieveFullInvoiceRespDTO>(invoiceModelFull);
 
             return new GenericRespDTO<RetrieveFullInvoiceRespDTO>("OK", "Invoice retrive success", invoiceFullResp);
+        }
+
+        public async Task<GenericRespDTO<string>> DeleteInvoice(int id)
+        {
+
+            _logger.LogInformation("ide invoice: {}", id);
+
+            var invoiceModel = await _dBContextTest
+                .Invoices
+                .Where (x => x.Id == id && x.Status.Equals(IntegrityApiConstants.StatusActive))
+                .FirstOrDefaultAsync()
+                ?? throw new NotFoundException($"Invoice with id {id} not exists");
+
+            invoiceModel.Status = IntegrityApiConstants.StatusDelete;
+
+            await _dBContextTest.SaveChangesAsync();
+
+            return new GenericRespDTO<string>("OK", "Invoice deleted success", "");
         }
     }
 }

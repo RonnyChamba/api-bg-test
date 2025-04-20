@@ -55,6 +55,15 @@ namespace ApiPruebaIntegrity.Controllers
             return Ok(response);
         }
 
+        [Authorize]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteInvoice(int id)
+        {
+            var response = await _invoiceService.DeleteInvoice(id);
+
+            return Ok(response);
+        }
+
 
 
     }
