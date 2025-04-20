@@ -89,6 +89,7 @@ namespace ApiPruebaIntegrity.Services.Impl
             customerModel.CellPhone = newData.CellPhone;
             customerModel.Address = newData.Address;
             customerModel.CellPhone = newData.CellPhone;
+            customerModel.Email = newData.Email;
 
             await _dBContextTest.SaveChangesAsync();
 
