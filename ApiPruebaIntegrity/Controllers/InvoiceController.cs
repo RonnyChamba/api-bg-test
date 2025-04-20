@@ -45,7 +45,17 @@ namespace ApiPruebaIntegrity.Controllers
             return Ok(response);
         }
 
-        
+
+        [Authorize]
+        [HttpGet("{id}")]
+        public async Task<IActionResult> FindInvoice(int id)
+        {
+            var response = await _invoiceService.FindFullInvoice(id);
+
+            return Ok(response);
+        }
+
+
 
     }
 }

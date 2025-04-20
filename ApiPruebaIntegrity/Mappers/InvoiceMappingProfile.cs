@@ -12,6 +12,9 @@ namespace ApiPruebaIntegrity.Mappers
             CreateMap<InvoiceDetailReqDTO, InvoiceDetail>();
             CreateMap<InvoicePayFormReqDTO, InvoicePayForm>();
             CreateMap<Invoice, InvoiceRespDTO>();
+            CreateMap<Invoice, RetrieveFullInvoiceRespDTO>();
+            CreateMap<InvoiceDetail, InvoiceDetailRespDTO>();
+            CreateMap<InvoicePayForm, InvoicePayFormRespDTO>();
         }
     }
 }

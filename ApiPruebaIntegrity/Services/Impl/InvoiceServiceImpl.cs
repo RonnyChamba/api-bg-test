@@ -125,5 +125,23 @@ namespace ApiPruebaIntegrity.Services.Impl
 
             return new GenericRespDTO<List<InvoiceRespDTO>> ("OK", "Operation Success", invoicesResp);
         }
+
+        public async Task<GenericRespDTO<RetrieveFullInvoiceRespDTO>> FindFullInvoice(int id)
+        {
+
+            _logger.LogInformation("ide invoice: {}", id);
+
+            var invoiceModelFull= await _dBContextTest
+                .Invoices
+                .Include(x => x.Details)
+                .Include(x => x.InvoicePayForm)
+                .Where (x => x.Id == id)
+                .FirstOrDefaultAsync()
+                ?? throw new NotFoundException($"Invoice with id {id} not exists");
+
+           var invoiceFullResp = _mapper.Map<RetrieveFullInvoiceRespDTO>(invoiceModelFull);
+
+            return new GenericRespDTO<RetrieveFullInvoiceRespDTO>("OK", "Invoice retrive success", invoiceFullResp);
+        }
     }
 }

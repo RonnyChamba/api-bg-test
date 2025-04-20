@@ -7,5 +7,6 @@ namespace ApiPruebaIntegrity.Services
     {
         Task <GenericRespDTO<string>> CreateInvoice(GenericReqDTO<InvoiceReqDTO> reqDTO);
         Task <GenericRespDTO<List<InvoiceRespDTO>>> FindAllInvoice(GenericReqDTO<FilterInvoiceReqDTO> reqDTO);
+        Task <GenericRespDTO<RetrieveFullInvoiceRespDTO>> FindFullInvoice(int id);
     }
 }
