@@ -131,15 +131,9 @@ namespace ApiPruebaIntegrity.Services.Impl
 
             _logger.LogInformation("ide invoice: {}", id);
 
-            var invoiceModelFull= await _dBContextTest
-                .Invoices
-                .Include(x => x.Details)
-                .Include(x => x.InvoicePayForm)
-                .Where (x => x.Id == id && x.Status.Equals(IntegrityApiConstants.StatusActive))
-                .FirstOrDefaultAsync()
-                ?? throw new NotFoundException($"Invoice with id {id} not exists");
+            var invoiceModelFull= await RetrieveFullInvoice(id);
 
-           var invoiceFullResp = _mapper.Map<RetrieveFullInvoiceRespDTO>(invoiceModelFull);
+            var invoiceFullResp = _mapper.Map<RetrieveFullInvoiceRespDTO>(invoiceModelFull);
 
             return new GenericRespDTO<RetrieveFullInvoiceRespDTO>("OK", "Invoice retrive success", invoiceFullResp);
         }
@@ -160,6 +154,74 @@ namespace ApiPruebaIntegrity.Services.Impl
             await _dBContextTest.SaveChangesAsync();
 
             return new GenericRespDTO<string>("OK", "Invoice deleted success", "");
+        }
+
+        public  async Task<GenericRespDTO<string>> UpdateInvoice(GenericReqDTO<InvoiceReqDTO> reqDTO, int id)
+        {
+
+            _logger.LogInformation("Req UpdateInvoice: {} ide invoice: {}", reqDTO, id);
+
+            // obtengo la factura
+            var invoiceModel = await RetrieveInvoice(id);
+
+            var newReqInvoice = reqDTO.Payload;
+
+            // eliminar todos los detalles de la factura
+            await _dBContextTest
+                .InvoiceDetails
+                .Where(d => d.InvoiceId == id)
+                .ExecuteDeleteAsync();
+
+            // eliminar todas las formas de pago
+            await _dBContextTest
+                .InvoicePayForm
+              .Where(d => d.InvoiceId == id)
+              .ExecuteDeleteAsync();
+
+            // actualizar la nueva data de la factura
+             UpdateInfoGeneralInvoice(newReqInvoice, invoiceModel);
+            await SetInfoCustomerInvoice(newReqInvoice, invoiceModel);
+            await SetInfoUserInvoice(newReqInvoice, invoiceModel);
+            invoiceModel.Details = _mapper.Map<List<InvoiceDetail>>(newReqInvoice.Details);
+            invoiceModel.InvoicePayForm = _mapper.Map<List<InvoicePayForm>>(newReqInvoice.InvoicePayForm);
+
+            await _dBContextTest.SaveChangesAsync();
+
+            return new GenericRespDTO<string>("OK", "Invoice updated success", id.ToString());
+   
+        }
+
+        private void  UpdateInfoGeneralInvoice(InvoiceReqDTO invoiceReqDTO, Invoice invoice)
+        {
+
+            invoice.CreateAt = DateUtil.GetDateTimeFromString(invoiceReqDTO.CreateAt);
+            invoice.PorcentajeIva = invoiceReqDTO.PorcentajeIva;
+            invoice.IvaValue = invoiceReqDTO.IvaValue;
+            invoice.StatusPay = invoiceReqDTO.StatusPay;
+            invoice.SubTotal = invoiceReqDTO.SubTotal;
+            invoice.Total = invoiceReqDTO.Total;
+        }
+
+        private async Task<Invoice> RetrieveFullInvoice(int id) 
+        {
+            return await _dBContextTest
+             .Invoices
+             .Include(x => x.Details)
+             .Include(x => x.InvoicePayForm)
+             .Where(x => x.Id == id && x.Status.Equals(IntegrityApiConstants.StatusActive))
+             .FirstOrDefaultAsync()
+             ?? throw new NotFoundException($"Invoice with id {id} not exists");
+
+        }
+
+        private async Task<Invoice> RetrieveInvoice(int id)
+        {
+            return await _dBContextTest
+             .Invoices
+             .Where(x => x.Id == id && x.Status.Equals(IntegrityApiConstants.StatusActive))
+             .FirstOrDefaultAsync()
+             ?? throw new NotFoundException($"Invoice with id {id} not exists");
+
         }
     }
 }

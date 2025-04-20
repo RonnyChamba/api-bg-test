@@ -56,6 +56,15 @@ namespace ApiPruebaIntegrity.Controllers
         }
 
         [Authorize]
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateInvoice([FromBody] GenericReqDTO<InvoiceReqDTO> reqDTO, int id)
+        {
+            var response = await _invoiceService.UpdateInvoice(reqDTO, id);
+
+            return Ok(response);
+        }
+
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteInvoice(int id)
         {
