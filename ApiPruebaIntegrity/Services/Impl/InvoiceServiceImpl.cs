@@ -106,5 +106,21 @@ namespace ApiPruebaIntegrity.Services.Impl
             return sequence.LastNumber.ToString("D10");
         }
 
+        public async Task<GenericRespDTO<List<InvoiceRespDTO>>> FindAllInvoice(GenericReqDTO<FilterInvoiceReqDTO> reqDTO)
+        {
+            _logger.LogInformation("Req FindAllInvoice: {}", reqDTO);
+
+            var companyId = _sessionService.RetrieveIdCompanySession();
+
+            var invoicesModel = await _dBContextTest
+                .Invoices
+                .Where(x => x.CompanyId == companyId  && 
+                            x.Status.Equals(IntegrityApiConstants.StatusActive))
+                .ToListAsync();
+
+            var invoicesResp = _mapper.Map<List<InvoiceRespDTO>>(invoicesModel);
+
+            return new GenericRespDTO<List<InvoiceRespDTO>> ("OK", "Operation Success", invoicesResp);
+        }
     }
 }

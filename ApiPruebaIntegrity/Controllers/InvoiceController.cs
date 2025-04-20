@@ -28,6 +28,15 @@ namespace ApiPruebaIntegrity.Controllers
         
         }
 
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> FindAllInvoice() {
+
+            var response = await _invoiceService.FindAllInvoice(null); 
+
+            return Ok(response);
+        }
+
         
 
     }
