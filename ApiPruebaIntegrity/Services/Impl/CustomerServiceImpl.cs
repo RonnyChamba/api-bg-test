@@ -32,6 +32,7 @@ namespace ApiPruebaIntegrity.Services.Impl
             var customerModel = _mapper.Map<Customer>(reqDTO.Payload);
             customerModel.Status = IntegrityApiConstants.StatusActive;
             customerModel.CompanyId = _sessionService.RetrieveIdCompanySession();
+            customerModel.CreateAt = DateTime.Now;
 
             await _dBContextTest.Customers.AddAsync(customerModel);
             await _dBContextTest.SaveChangesAsync();

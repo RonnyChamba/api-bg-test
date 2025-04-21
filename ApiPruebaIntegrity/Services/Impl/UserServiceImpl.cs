@@ -95,6 +95,7 @@ namespace ApiPruebaIntegrity.Services.Impl
             userModel.CompanyId = RetrieveIdCompanySession();
             userModel.Password = AuthUtil.HashPassword(userModel.Password);
             userModel.Status = IntegrityApiConstants.StatusActive;
+            userModel.CreateAt = DateTime.Now;
 
             return userModel;
 
