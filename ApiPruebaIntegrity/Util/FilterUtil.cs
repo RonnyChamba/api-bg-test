@@ -31,11 +31,39 @@ namespace ApiPruebaIntegrity.Util
                 case InvoiceFilterTypeEnum.InvoiceNumber:
                     return query.Where(i => i.InvoiceNumber.ToUpper().Contains(value));
 
+                case InvoiceFilterTypeEnum.RangeDate:
+                    return ApplyRangeDateFilter( query, value);
+
                 case InvoiceFilterTypeEnum.InvoiceTotal:
                     return ApplyTotalFilter(query, value, filter.ComparisonOperator);
             }
 
             return query;
+        }
+
+        public static IQueryable<Invoice> ApplyRangeDateFilter(IQueryable<Invoice> query, string value)
+        {
+
+            if (string.IsNullOrWhiteSpace(value))
+                return query;
+
+            var dates = value.Split('|');
+
+            if (dates.Length != 2)
+                return query;
+
+            if (!DateTime.TryParseExact(dates[0], "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out var startDate) ||
+                !DateTime.TryParseExact(dates[1], "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out var endDate))
+            {
+                return query;
+            }
+
+            // Asegurarse de comparar solo la parte de la fecha
+            startDate = startDate.Date;
+            endDate = endDate.Date;
+
+            return query.Where(invoice => invoice.CreateAt.Date >= startDate && invoice.CreateAt.Date <= endDate);
+
         }
 
         public static IQueryable<Invoice> ApplyTotalFilter(IQueryable<Invoice> query, string value, ComparisonOperatorEnum? op)

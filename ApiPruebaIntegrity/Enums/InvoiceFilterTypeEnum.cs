@@ -4,6 +4,7 @@
     {
         CustomerName,
         InvoiceNumber,
+        RangeDate,
         InvoiceTotal
     }
 }
