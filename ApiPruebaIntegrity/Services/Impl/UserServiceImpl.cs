@@ -187,6 +187,6 @@ namespace ApiPruebaIntegrity.Services.Impl
                                        ?? throw new NotFoundException($"User with id {id} no exist");
         }
 
-        
+
     }
 }
